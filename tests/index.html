@@ -1,0 +1,36 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <base href="http://127.0.0.1:8080/" />
+    <script src="dist-webpack/bundle.js"></script>
+</head>
+
+<style>
+    .header {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .header button {
+        margin-left: 10px;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <p id="text-header">Meu próprio fabric Open Source</p>
+        <button id="btn" disabled>Testar alguma coisa</button>
+    </div>
+
+    <div id="canvas" style="width: 80%; height: 80%; border: 1px solid; margin: auto;">
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>

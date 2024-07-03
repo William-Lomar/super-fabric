@@ -2,19 +2,31 @@
   "name": "super-fabric",
   "description": "Pacote adicionando novas funcionalidades à lib fabric.js",
   "version": "0.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "devDependencies": {
-    "@types/node": "^20.14.8",
-    "nodemon": "^3.1.4",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.2"
-  },
+  "main": "dist-typescript/index.js",
+  "types": "dist-typescript/index.d.ts",
+  "author": "Só cara bom",
+  "license": "MIT",
   "scripts": {
     "start": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --declaration",
-    "dev": "ts-node src/index.ts"
+    "build": "del-cli dist-typescript && tsc --declaration",
+    "serve": "http-server ./tests -p 8080 --cors",
+    "webpack": "del-cli dist-webpack && webpack",
+    "build-dev": "npm run webpack && del-cli dist-typescript && tsc --declaration --emitDeclarationOnly && del-cli tests/dist-webpack && del-cli tests/dist-typescript && copyfiles dist-webpack/**/* dist-typescript/**/* tests && npm run serve"
   },
-  "author": "Só cara bom",
-  "license": "MIT"
+  "dependencies": {
+    "fabric": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/fabric": "^5.3.7",
+    "@types/node": "^20.14.8",
+    "copyfiles": "^2.4.1",
+    "del-cli": "^5.1.0",
+    "http-server": "^14.1.1",
+    "nodemon": "^3.1.4",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  }
 }
