@@ -88,6 +88,13 @@ export class SuperFabric {
         this.cor = cor
     }
 
+    setBackgroundColor(color: string, callback?: Function) {
+        this.canvas.setBackgroundColor(color, () => {
+            if (typeof callback == 'function') callback();
+            this.reload();
+        });
+    }
+
     /**
      * Seta função que altera o status da função atual da instancia
      * @param funcao 
@@ -117,5 +124,12 @@ export class SuperFabric {
     */
     private desabilitarTodasFuncoes() {
         this.floodFill.disable();
+    }
+
+    /**
+     * Renderiza novamente o editor/canvar aplicando todas as alterações
+     */
+    private reload() {
+        this.canvas.renderAll();
     }
 }
