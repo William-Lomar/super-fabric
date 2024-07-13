@@ -2,40 +2,40 @@ import { fabric } from "fabric";
 import { NSuperFabric } from "../model";
 import { DebounceTime } from "../utils";
 
-type Orientacao = NSuperFabric.NDimension.EOrientacao;
-const EOrientacao = NSuperFabric.NDimension.EOrientacao;
+type Orientation = NSuperFabric.NDimension.EOrientation;
+const EOrientation = NSuperFabric.NDimension.EOrientation;
 
 /**
- * Classe para tratar as dimensões do canvas, formato A4, A3 ou customizado
+ * Class to handle canvas dimensions, A4, A3 or customized format
  */
 export class DimensionManager {
-    private orientacao: Orientacao = EOrientacao.VERTICAL
+    private orientation: Orientation = EOrientation.Portrait
     /** Y(height) / X(width) */
     private factor: number
 
     constructor(
         private canvas: fabric.Canvas,
         private divContainer: HTMLElement,
-        options?: NSuperFabric.NDimension.IDimensionConfigs
+        options?: NSuperFabric.NDimension.IDimensionOptions
     ) {
         let newWidth: number, newHeight: number;
 
         if (options) {
-            this.orientacao = options.orientacao;
+            this.orientation = options.orientation;
             let width: number, height: number;
-            switch (options.formato) {
-                case NSuperFabric.NDimension.EFormatos.A4:
-                    width = options.orientacao == EOrientacao.VERTICAL ? 210 : 297;
-                    height = options.orientacao == EOrientacao.VERTICAL ? 297 : 210;
+            switch (options.format) {
+                case NSuperFabric.NDimension.EFormat.A4:
+                    width = options.orientation == EOrientation.Portrait ? 210 : 297;
+                    height = options.orientation == EOrientation.Portrait ? 297 : 210;
                     break;
 
-                case NSuperFabric.NDimension.EFormatos.Custom:
+                case NSuperFabric.NDimension.EFormat.Custom:
                     width = options.width ?? divContainer.offsetWidth;
                     height = options.height ?? divContainer.offsetHeight;
                     break;
 
                 default:
-                    throw new Error("Dimension Value não reconhecido");
+                    throw new Error("Dimension Value not recognized");
                     break;
             }
 
@@ -43,7 +43,7 @@ export class DimensionManager {
             newWidth = this.calcularNovoWidth();
             newHeight = newWidth * this.factor;
         } else {
-            //No primeiro momento simplesmente, se não for passado um fator a nova area no primeiro momento simplesmente será a area disponivel
+            //At first, if a factor is not passed, the new area at first will simply be the available area.
             this.factor = divContainer.offsetHeight / divContainer.offsetWidth;
             newWidth = divContainer.offsetWidth;
             newHeight = divContainer.offsetHeight;
@@ -53,22 +53,22 @@ export class DimensionManager {
         canvas.setHeight(newHeight);
 
         const debounce = new DebounceTime(50);
-        //Atualizando dinamicamente a area de desenho quando o usuario mudar o tamanho da tela
+        //Dynamically updating the drawing area when the user changes the screen size
         const observer = new ResizeObserver(() => {
-            debounce.exec(this.atualizarArea.bind(this));
+            debounce.exec(this.updateArea.bind(this));
         })
 
         observer.observe(divContainer);
     }
 
-    rotacionar() {
-        if (this.orientacao == EOrientacao.VERTICAL) this.setOrientacao(EOrientacao.HORIZONTAL);
-        else if (this.orientacao == EOrientacao.HORIZONTAL) this.setOrientacao(EOrientacao.VERTICAL);
+    rotate() {
+        if (this.orientation == EOrientation.Portrait) this.setOrientation(EOrientation.Landscape);
+        else if (this.orientation == EOrientation.Landscape) this.setOrientation(EOrientation.Portrait);
     }
 
-    setOrientacao(orientacao: Orientacao) {
-        if (this.orientacao != orientacao) {
-            this.orientacao = orientacao;
+    setOrientation(orientacao: Orientation) {
+        if (this.orientation != orientacao) {
+            this.orientation = orientacao;
             this.factor = 1 / this.factor;
 
             const newWidth = this.calcularNovoWidth();
@@ -80,7 +80,7 @@ export class DimensionManager {
         };
     }
 
-    private atualizarArea() {
+    private updateArea() {
         const canvas = this.canvas;
         const newWidth = this.calcularNovoWidth();
 
@@ -113,7 +113,7 @@ export class DimensionManager {
     }
 
     /**
-     * Aumenta/diminui todo o conteudo do canvas de acordo com o multiplicador passado
+     * Increases/decreases the entire canvas content according to the passed multiplier
      * @param scaleMultiplier 
      */
     private scaleAll(scaleMultiplier: number) {

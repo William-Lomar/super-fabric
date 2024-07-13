@@ -4,30 +4,32 @@ import { NSuperFabric } from "./model";
 import { fabric } from 'fabric';
 import { DimensionManager } from "./class-functions/dimension";
 import { Color } from "fabric/fabric-impl";
+import { MatrizManager } from "./class-functions/matriz";
 
-//Classes e funções que a lib também irá disponibilizar
+//Classes and functions that the lib will also make available
 export { NSuperFabric } from "./model";
 export { fabric } from 'fabric';
 
 export class SuperFabric {
-    /** Div onde está contido o fabric */
-    private areaCanvas: HTMLElement;
+    /** Div where the fabric is contained */
+    private divContainer: HTMLElement;
     /** Canvas Fabric element */
     private canvas: fabric.Canvas;
 
     //Props
-    /** Cor que será utiliza  */
-    /**Usado para identificar qual a ferramenta que está selecionada */
-    private funcaoAtiva: NSuperFabric.EFuncoes = NSuperFabric.EFuncoes.Selecionar;
-    private cor: Color = new fabric.Color('rgb(0,0,0)'); // Inicia com a cor branca
+    /** Used to identify which function is selected */
+    private activeFunction: NSuperFabric.EFunctions = NSuperFabric.EFunctions.Select;
+    /** Color that will be used */
+    private color: Color = new fabric.Color('rgb(0,0,0)'); // Inicia com a cor branca
 
     //Class functions
     private floodFill: FloodFill;
     private dimensionManager: DimensionManager;
+    private matrizManager: MatrizManager;
 
     /**'
-     * Usado initialize para habilitar o uso de funções assincronas no momento da construção do SuperFabric
-     * @param id ID da div onde será instanciado o SuperFabric 
+     * Used initialize to enable the use of asynchronous functions at SuperFabric build time
+     * @param id ID of the div where SuperFabric will be instantiated
      * @param options 
      * @returns 
      */
@@ -36,35 +38,35 @@ export class SuperFabric {
     }
 
     private constructor(id: string, options?: NSuperFabric.IOptions) {
-        //Definindo o delimitador da area que será utilizada pelo canvas
-        const areaCanvas = document.getElementById(id);
-        if (!areaCanvas) throw new Error("Div onde será instanciado o fabric não encontrado!");
-        this.areaCanvas = areaCanvas;
+        //Defining the delimiter of the area that will be used by the canvas
+        const divContainer = document.getElementById(id);
+        if (!divContainer) throw new Error("Div where the fabric will be instantiated not found!");
+        this.divContainer = divContainer;
 
-        //Criando elemento canvas dentro da div
+        //Creating canvas element inside the div
         const canvas = document.createElement('canvas');
         canvas.id = id + '-canvas';
-        this.areaCanvas.appendChild(canvas);
+        this.divContainer.appendChild(canvas);
 
-        //Instanciando fabric no canvas
+        //Instantiating fabric on canvas
         this.canvas = new fabric.Canvas(canvas, options);
 
-        //Definindo configs inicias
-        if (options?.cor) this.cor = new fabric.Color(options.cor);
+        //Defining initial settings
+        if (options?.color) this.color = new fabric.Color(options.color);
 
-        //Definindo funções 
+        //Defining funcitons
         this.floodFill = new FloodFill(this.canvas, 20);
-        this.dimensionManager = new DimensionManager(this.canvas, this.areaCanvas, options?.dimensionsConfigs);
+        this.dimensionManager = new DimensionManager(this.canvas, this.divContainer, options?.dimensionsOptions);
+        this.matrizManager = new MatrizManager(this.canvas, options?.matrizOptions)
     }
 
-    //* Metodos públicos
+    //* Public methods
     getCanvas(): fabric.Canvas {
         return this.canvas;
     }
 
     /**
-     * Configura o icone do mouse do fabric
-     * @param url Todo cursor deve vim de uma url ou ser none (Nenhum)
+     * @param url Every cursor must come from a url or be none
      */
     @autoReload
     setMouseIcon(url: string | 'none', center?: { x: number, y: number }) {
@@ -77,20 +79,13 @@ export class SuperFabric {
         }
 
         this.canvas.defaultCursor = urlCursor;
-        //Quando se utiliza a função matriz são desenhados retangulos no fundo, então é necessário alterar os cursores também
-        // this.rectanglesMatriz.forEach((rect) => {
-        //     rect.hoverCursor = urlCursor;
-        // })
-
         this.canvas.getObjects().forEach((obj) => {
             obj.hoverCursor = urlCursor;
         })
     }
 
-    setCor(cor: string) {
-        this.cor = new fabric.Color(cor);
-        console.log(this.cor);
-        
+    setColor(color: string) {
+        this.color = new fabric.Color(color);
     }
 
     setBackgroundColor(color: string, callback?: Function) {
@@ -101,46 +96,46 @@ export class SuperFabric {
     }
 
     /**
-     * Seta função que altera o status da função atual da instancia
-     * @param funcao 
+     * Arrow function that changes the status of the current function of the instance
+     * @param func 
      */
-    setFuncaoAtiva(funcao: NSuperFabric.EFuncoes) {
-        this.funcaoAtiva = funcao;
-        this.desabilitarTodasFuncoes();
+    setActiveFunction(func: NSuperFabric.EFunctions) {
+        this.activeFunction = func;
+        this.disableAllFunctions();
 
-        switch (funcao) {
-            case NSuperFabric.EFuncoes.Selecionar:
+        switch (func) {
+            case NSuperFabric.EFunctions.Select:
                 break;
 
-            case NSuperFabric.EFuncoes.FloodFill:
-                this.floodFill.enable(this.cor.toHexa());
+            case NSuperFabric.EFunctions.FloodFill:
+                this.floodFill.enable('#' + this.color.toHex());
                 break;
 
             default:
-                throw new Error("Função solicitada não está mapeada")
+                throw new Error("Requested function is not mapped");
                 break;
         }
     }
 
-    setOrientacao(orientacao: NSuperFabric.NDimension.EOrientacao) {
-        this.dimensionManager.setOrientacao(orientacao);
+    setOrientation(orientation: NSuperFabric.NDimension.EOrientation) {
+        this.dimensionManager.setOrientation(orientation);
     }
 
-    rotacionar() {
-        this.dimensionManager.rotacionar();
+    rotate() {
+        this.dimensionManager.rotate();
     }
 
-    //* Metodos privados
+    //* Private methods
 
     /**
-    * Desabilita todas as ferramentas quando a função selecionar for chamada e sempre que uma nova ferramenta for ser utilizada
+    * Disables all tools when the select function is called and whenever a new tool is to be used
     */
-    private desabilitarTodasFuncoes() {
+    private disableAllFunctions() {
         this.floodFill.disable();
     }
 
     /**
-     * Renderiza novamente o editor/canvar aplicando todas as alterações
+     * Rerender the editor/canva applying all changes
      */
     private reload() {
         this.canvas.renderAll();

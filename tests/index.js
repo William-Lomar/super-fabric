@@ -22,7 +22,20 @@ const NSuperFabric = SuperFabricLibrary.NSuperFabric
  */
 function casoTeste(superfabric) {
     console.log("Testando superfabric: ", NSuperFabric);
-    superfabric.setCor('red');
+    
+    const r = new fabric.Rect({
+        width: 50,
+        height: 50,
+        fill: 'red'
+    })
+    
+    superfabric.getCanvas().add(r);
+    
+    
+    
+    superfabric.setColor('green');
+    superfabric.setActiveFunction(2)
+
 }
 
 /** * @type {IOptions} */

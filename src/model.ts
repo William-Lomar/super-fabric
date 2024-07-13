@@ -1,34 +1,43 @@
 import { ICanvasOptions } from "fabric/fabric-impl";
 
 export namespace NSuperFabric {
-    export enum EFuncoes {
-        Selecionar = 1,
+    export enum EFunctions {
+        Select = 1,
         FloodFill
     }
 
     export interface IOptions extends ICanvasOptions {
-        dimensionsConfigs?: NDimension.IDimensionConfigs,
-        cor?: string
+        dimensionsOptions?: NDimension.IDimensionOptions,
+        color?: string,
+        matrizOptions: NMatriz.IMatrizOptions
     }
 
     export namespace NDimension {
-        export enum EOrientacao {
-            VERTICAL = 'vertical',
-            HORIZONTAL = 'horizontal'
+        export enum EOrientation {
+            Portrait = 'Portrait',
+            Landscape = 'Landscape'
         }
 
-        export enum EFormatos {
+        export enum EFormat {
             A4 = 1,
             Custom
         }
 
-        export interface IDimensionConfigs {
-            orientacao: EOrientacao,
-            formato: EFormatos,
-            /** Tempo de debounce para dar o resize no canvas em milisegundos quando ocorrer uma alteração na divContainer que irá conter o canvas, default 50 ms */
+        export interface IDimensionOptions {
+            orientation: EOrientation,
+            format: EFormat,
+            /** Debounce time to resize the canvas in milliseconds when a change occurs in the divContainer that will contain the canvas, default 50 ms */
             debounceTime?: number, 
             width?: number
             height?: number
+        }
+    }
+
+    export namespace NMatriz {
+        export interface IMatrizOptions {
+            linhas: { colunas: number }[],
+            showMargins: boolean,
+            backgroundColor: string | fabric.Pattern | fabric.Gradient | fabric.Color
         }
     }
 }

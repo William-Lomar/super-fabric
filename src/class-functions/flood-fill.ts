@@ -1,13 +1,13 @@
 import { fabric } from "fabric";
-//* Parece que funciona: https://jsfiddle.net/av01d/dfvp9j2u/
+//* It seems to work: https://jsfiddle.net/av01d/dfvp9j2u/
 //* https://gist.github.com/jon-hall/2fc30039629ef22bc95c
 
 /**
- * Classe para utilizaçao da funcionalidade de preencher
+ * Class for using the fill functionality
  */
 export class FloodFill {
-    private habilitado: boolean = false;
-    /** Cor em hexadecimal */
+    private enabled: boolean = false;
+    /** Color in hexadecimal */
     private fillColor?: string;
 
     constructor(private fcanvas: fabric.Canvas, private fillTolerance: number) {
@@ -16,26 +16,26 @@ export class FloodFill {
 
     /**
      * 
-     * @param fillColor Cor em hexadecimal 
+     * @param fillColor Color in hexadecimal
      */
     enable(fillColor: string) {
-        if (!fillColor.startsWith("#")) throw new Error("A cor deve ser passada em hexadecimal!");
+        if (!fillColor.startsWith("#")) throw new Error("The color must be passed in hexadecimal!");
 
-        this.habilitado = true;
+        this.enabled = true;
         this.fillColor = fillColor;
     }
 
     disable() {
-        this.habilitado = false;
+        this.enabled = false;
     }
 
     /**
-     * Realiza as configurações/subscrições necessárias para a função de preenchimento funcionar
+     * Performs the necessary configurations/subscriptions for the fill function to work
      */
     private initialize() {
         this.fcanvas.on('mouse:down', (e) => {
-            if (!this.habilitado) return;
-            if (!this.fillColor) throw new Error("Cor do Flood-fill não foi setada");
+            if (!this.enabled) return;
+            if (!this.fillColor) throw new Error("Flood-fill color was not set");
 
             var mouse = this.fcanvas.getPointer(e.e),
                 //@ts-ignore
@@ -102,7 +102,7 @@ export class FloodFill {
             })
 
             objImg.scale(factor);
-            this.fcanvas.add(objImg)
+            this.fcanvas.add(objImg);
         })
     }
 

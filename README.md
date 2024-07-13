@@ -1,13 +1,13 @@
 # super-fabric
-Pacote adicionando novas funcionalidades à lib fabric.js, além de criar uma interface em pt-br pra ajudar nossa comunidade aí do Brasil. 
--- Lib para utilização no front-end
+Package adding new features to the fabric.js lib
+-- Lib for front-end use
 
 -- package: 
-        "build": Gera a build obviamente,
-        "serve": Disponibiliza um servidor para servir os arquivos javascript para testes na interface 
-        "build-dev": Gera toda a build necessária para testes de desenvolvimento e sobe o servidor local
-        "webpack": gera um bundle da aplicação para ser utilizado diretamente no html, - Classes disponiveis na variavel global 'SuperFabricLibrary' 
+        "build": Generates the build obviously,
+        "serve": Provides a server to serve javascript files for interface testing
+        "build-dev": Generates all the build necessary for development testing and uploads the local server
+        "webpack": generates an application bundle to be used directly in the html, - Classes available in the global variable 'SuperFabricLibrary'
 
 TODO: 
-        *Passar tudo para inglês
-        *Criar e usar o value object Color
+        *Matriz
+        *Zoom
