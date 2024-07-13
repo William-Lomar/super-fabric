@@ -2,6 +2,7 @@
  *  @typedef {import('./dist-typescript/index').SuperFabric} SuperFabric
  *  @typedef {import('./dist-typescript/index').fabric} fabric
  *  @typedef {import('./dist-typescript/index').NSuperFabric} NSuperFabric
+ *  @typedef {import('./dist-typescript/index').NSuperFabric.IOptions} IOptions
  * 
 */
 
@@ -21,33 +22,27 @@ const NSuperFabric = SuperFabricLibrary.NSuperFabric
  */
 function casoTeste(superfabric) {
     console.log("Testando superfabric: ", NSuperFabric);
-    const canvas = superfabric.getCanvas();
-
-    var rect = new fabric.Rect({
-        left: 100,
-        top: 50,
-        width: 100,
-        height: 100,
-        angle: 20,
-        padding: 10,
-        fill: 'rgba(0,0,0,0)',
-        stroke: 'red'
-    });
-    canvas.add(rect);
-
-    setTimeout(() => {
-        superfabric.setCor("#FF0000");
-        superfabric.setFuncaoAtiva(NSuperFabric.EFuncoes.FloodFill);
-    }, 150);
+    superfabric.rotacionar();
 }
 
-SuperFabric.initialize('canvas').then((superfabric) => {
+/** * @type {IOptions} */
+const options = {
+    dimensionsConfigs: {
+        orientacao: 'vertical',
+        formato: 1
+    }
+}
+
+SuperFabric.initialize('canvas', options).then((superfabric) => {
     const headerHTML = document.getElementById('text-header')
     if (headerHTML) headerHTML.innerHTML += ' - Instanciado com sucesso!';
 
     const btnHTML = document.getElementById('btn');
     btnHTML.onclick = () => { casoTeste(superfabric) }
     document.getElementById('btn').disabled = false;
+
+
+    superfabric.setBackgroundColor("blue");
 }).catch((err) => {
     console.error("Ocorreu um erro ao inicializar o canvas: ", err);
     const headerHTML = document.getElementById('header')

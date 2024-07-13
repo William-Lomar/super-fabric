@@ -1,4 +1,4 @@
-import { Canvas, IImageOptions, Image, CircleBrush, PencilBrush, ICanvasOptions, IObjectOptions, IUtil } from "fabric/fabric-impl";
+import { ICanvasOptions } from "fabric/fabric-impl";
 
 export namespace NSuperFabric {
     export enum EFuncoes {
@@ -7,18 +7,28 @@ export namespace NSuperFabric {
     }
 
     export interface IOptions extends ICanvasOptions {
-        configsA4?: IConfigsA4,
+        dimensionsConfigs?: NDimension.IDimensionConfigs,
         cor?: string
     }
 
-    export enum EOrientacao {
-        VERTICAL = 'vertical',
-        HORIZONTAL = 'horizontal'
-    }
+    export namespace NDimension {
+        export enum EOrientacao {
+            VERTICAL = 'vertical',
+            HORIZONTAL = 'horizontal'
+        }
 
-    export interface IConfigsA4 {
-        orientacao: EOrientacao,
-        nLinhas: number,
-        nColunas: number
+        export enum EFormatos {
+            A4 = 1,
+            Custom
+        }
+
+        export interface IDimensionConfigs {
+            orientacao: EOrientacao,
+            formato: EFormatos,
+            /** Tempo de debounce para dar o resize no canvas em milisegundos quando ocorrer uma alteração na divContainer que irá conter o canvas, default 50 ms */
+            debounceTime?: number, 
+            width?: number
+            height?: number
+        }
     }
 }

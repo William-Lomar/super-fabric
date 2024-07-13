@@ -2,6 +2,7 @@ import { autoReload } from "./decorators/auto-reload";
 import { FloodFill } from "./class-functions/flood-fill";
 import { NSuperFabric } from "./model";
 import { fabric } from 'fabric';
+import { DimensionManager } from "./class-functions/dimension";
 
 //Classes e funções que a lib também irá disponibilizar
 export { NSuperFabric } from "./model";
@@ -19,9 +20,9 @@ export class SuperFabric {
     private funcaoAtiva: NSuperFabric.EFuncoes = NSuperFabric.EFuncoes.Selecionar;
     private cor: string = 'rgb(0,0,0)'; // Inicia com a cor branca
 
-
     //Class functions
     private floodFill: FloodFill;
+    private dimensionManager: DimensionManager;
 
     /**'
      * Usado initialize para habilitar o uso de funções assincronas no momento da construção do SuperFabric
@@ -52,6 +53,7 @@ export class SuperFabric {
 
         //Definindo funções 
         this.floodFill = new FloodFill(this.canvas, 20);
+        this.dimensionManager = new DimensionManager(this.canvas, this.areaCanvas, options?.dimensionsConfigs);
     }
 
     //* Metodos públicos
@@ -115,6 +117,14 @@ export class SuperFabric {
                 throw new Error("Função solicitada não está mapeada")
                 break;
         }
+    }
+
+    setOrientacao(orientacao: NSuperFabric.NDimension.EOrientacao) {
+        this.dimensionManager.setOrientacao(orientacao);
+    }
+
+    rotacionar() {
+        this.dimensionManager.rotacionar();
     }
 
     //* Metodos privados

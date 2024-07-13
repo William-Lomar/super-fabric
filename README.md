@@ -8,3 +8,6 @@ Pacote adicionando novas funcionalidades à lib fabric.js, além de criar uma in
         "build-dev": Gera toda a build necessária para testes de desenvolvimento e sobe o servidor local
         "webpack": gera um bundle da aplicação para ser utilizado diretamente no html, - Classes disponiveis na variavel global 'SuperFabricLibrary' 
 
+TODO: 
+        *Passar tudo para inglês
+        *Criar e usar o value object Color
