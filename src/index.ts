@@ -3,6 +3,7 @@ import { FloodFill } from "./class-functions/flood-fill";
 import { NSuperFabric } from "./model";
 import { fabric } from 'fabric';
 import { DimensionManager } from "./class-functions/dimension";
+import { Color } from "fabric/fabric-impl";
 
 //Classes e funções que a lib também irá disponibilizar
 export { NSuperFabric } from "./model";
@@ -18,7 +19,7 @@ export class SuperFabric {
     /** Cor que será utiliza  */
     /**Usado para identificar qual a ferramenta que está selecionada */
     private funcaoAtiva: NSuperFabric.EFuncoes = NSuperFabric.EFuncoes.Selecionar;
-    private cor: string = 'rgb(0,0,0)'; // Inicia com a cor branca
+    private cor: Color = new fabric.Color('rgb(0,0,0)'); // Inicia com a cor branca
 
     //Class functions
     private floodFill: FloodFill;
@@ -49,7 +50,7 @@ export class SuperFabric {
         this.canvas = new fabric.Canvas(canvas, options);
 
         //Definindo configs inicias
-        if (options?.cor) this.cor = options.cor;
+        if (options?.cor) this.cor = new fabric.Color(options.cor);
 
         //Definindo funções 
         this.floodFill = new FloodFill(this.canvas, 20);
@@ -87,7 +88,9 @@ export class SuperFabric {
     }
 
     setCor(cor: string) {
-        this.cor = cor
+        this.cor = new fabric.Color(cor);
+        console.log(this.cor);
+        
     }
 
     setBackgroundColor(color: string, callback?: Function) {
@@ -110,7 +113,7 @@ export class SuperFabric {
                 break;
 
             case NSuperFabric.EFuncoes.FloodFill:
-                this.floodFill.enable(this.cor);
+                this.floodFill.enable(this.cor.toHexa());
                 break;
 
             default:

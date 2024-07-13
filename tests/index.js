@@ -22,7 +22,7 @@ const NSuperFabric = SuperFabricLibrary.NSuperFabric
  */
 function casoTeste(superfabric) {
     console.log("Testando superfabric: ", NSuperFabric);
-    superfabric.rotacionar();
+    superfabric.setCor('red');
 }
 
 /** * @type {IOptions} */
