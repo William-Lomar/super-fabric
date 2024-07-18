@@ -27,7 +27,7 @@ export namespace NSuperFabric {
             orientation: EOrientation,
             format: EFormat,
             /** Debounce time to resize the canvas in milliseconds when a change occurs in the divContainer that will contain the canvas, default 50 ms */
-            debounceTime?: number, 
+            debounceTime?: number,
             width?: number
             height?: number
         }
@@ -38,6 +38,13 @@ export namespace NSuperFabric {
             linhas: { colunas: number }[],
             showMargins: boolean,
             backgroundColor: string | fabric.Pattern | fabric.Gradient | fabric.Color
+        }
+    }
+
+    export namespace NSave {
+        export interface IProjectSuperFabric {
+            version: string;
+            objects: Object[];
         }
     }
 }

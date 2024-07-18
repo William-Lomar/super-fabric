@@ -5,6 +5,7 @@ import { fabric } from 'fabric';
 import { DimensionManager } from "./class-functions/dimension";
 import { Color } from "fabric/fabric-impl";
 import { MatrizManager } from "./class-functions/matriz";
+import { SaveManager } from "./class-functions/save";
 
 //Classes and functions that the lib will also make available
 export { NSuperFabric } from "./model";
@@ -20,12 +21,13 @@ export class SuperFabric {
     /** Used to identify which function is selected */
     private activeFunction: NSuperFabric.EFunctions = NSuperFabric.EFunctions.Select;
     /** Color that will be used */
-    private color: Color = new fabric.Color('rgb(0,0,0)'); // Inicia com a cor branca
+    private color: Color = new fabric.Color('rgb(0,0,0)'); //init white
 
     //Class functions
     private floodFill: FloodFill;
     private dimensionManager: DimensionManager;
     private matrizManager: MatrizManager;
+    private saveManager: SaveManager;
 
     /**'
      * Used initialize to enable the use of asynchronous functions at SuperFabric build time
@@ -54,10 +56,11 @@ export class SuperFabric {
         //Defining initial settings
         if (options?.color) this.color = new fabric.Color(options.color);
 
-        //Defining funcitons
+        //Defining funcitons and managers
         this.floodFill = new FloodFill(this.canvas, 20);
         this.dimensionManager = new DimensionManager(this.canvas, this.divContainer, options?.dimensionsOptions);
-        this.matrizManager = new MatrizManager(this.canvas, options?.matrizOptions)
+        this.matrizManager = new MatrizManager(this.canvas, options?.matrizOptions);
+        this.saveManager = new SaveManager(this.canvas);
     }
 
     //* Public methods
@@ -123,6 +126,14 @@ export class SuperFabric {
 
     rotate() {
         this.dimensionManager.rotate();
+    }
+
+    save() {
+        this.saveManager.save();
+    }
+
+    open(): Promise<void> {
+        return this.saveManager.open();
     }
 
     //* Private methods

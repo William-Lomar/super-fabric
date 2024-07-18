@@ -11,3 +11,5 @@ Package adding new features to the fabric.js lib
 TODO: 
         *Matriz
         *Zoom
+        *Assets manager
+        *Save manager
